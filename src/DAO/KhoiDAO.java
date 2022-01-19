@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.Khoi;
 import java.sql.*;
 import java.util.ArrayList;
@@ -119,28 +119,5 @@ public class KhoiDAO {
             closeConnec(con);
             closeStatement(pr);
         }
-    }
-
-    public ArrayList<Khoi> find(String txt) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<Khoi> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select * from tbl_khoi where maKhoi like N'%" + txt + "%' or tenKhoi like N'%" + txt + "%'");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maKhoi = rs.getString(1) + rs.getString(2);
-                Khoi khoi = new Khoi(maKhoi, rs.getString(3));
-                listAll.add(khoi);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
     }
 }

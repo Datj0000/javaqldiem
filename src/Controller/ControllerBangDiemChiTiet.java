@@ -7,7 +7,9 @@ import Model.*;
 import View.Component.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerBangDiemChiTiet {
 
@@ -17,6 +19,7 @@ public class ControllerBangDiemChiTiet {
     private final LopDAO lDAO;
     private final BangDiemChiTietDAO bdctDAO;
     private final JBangDiemChiTiet jBangDiemChiTiet;
+    private ModelBangDiemChiTiet modelBangDiemChiTiet;
 
     public ControllerBangDiemChiTiet(JBangDiemChiTiet _jBangDiemChiTiet) {
         this.jBangDiemChiTiet = _jBangDiemChiTiet;
@@ -44,18 +47,13 @@ public class ControllerBangDiemChiTiet {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jBangDiemChiTiet.txtSearch.getText().trim();
+            String txtSearch = jBangDiemChiTiet.txtSearch.getText().trim().toLowerCase();
             String maBangDiem = jBangDiemChiTiet.txtMaBangDiem.getText().replaceAll("[^\\d.]", "");
-            if (!"".equals(txtSearch) && !"".equals(maBangDiem)) {
-                if (!bdctDAO.find(txtSearch, maBangDiem).isEmpty()) {
-                    jBangDiemChiTiet.DataTable(new ModelBangDiemChiTiet(bdctDAO.find(txtSearch, maBangDiem)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!bdctDAO.getAll(maBangDiem).isEmpty()) {
-                    jBangDiemChiTiet.DataTable(new ModelBangDiemChiTiet(bdctDAO.getAll(maBangDiem)));
-                }
+            if (!bdctDAO.getAll(maBangDiem).isEmpty()) {
+                modelBangDiemChiTiet = (ModelBangDiemChiTiet) jBangDiemChiTiet.jTable.getModel();
+                TableRowSorter<ModelBangDiemChiTiet> trs = new TableRowSorter<>(modelBangDiemChiTiet);
+                jBangDiemChiTiet.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
         }
 
@@ -139,11 +137,11 @@ public class ControllerBangDiemChiTiet {
             if (bdct != null) {
                 if (bdctDAO.checkTen(bdct)) {
                     clearInfo();
-                    bdctDAO.update(bdct.getMaBangDiem(), bdct.getMaMon(), bdct);
+                    bdctDAO.update(bdct);
                     jBangDiemChiTiet.DataTable(new ModelBangDiemChiTiet(bdctDAO.getAll(bdct.getMaBangDiem())));
                     Menu.showMessage("Cập nhật thành công!");
                 } else {
-                    Menu.showMessage("Học kì này học sinh đã có điểm môn này rồi!");
+                    Menu.showMessage("Không tìm thấy môn học để sửa!");
                 }
             }
         }
@@ -167,23 +165,54 @@ public class ControllerBangDiemChiTiet {
         }
     }
 
+    static boolean checkFloat(String str) {
+        try {
+            Float.parseFloat(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    static boolean checkDiem(float diem) {
+        if (0 < diem && diem < 10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public BangDiemChiTiet getInfo() {
         try {
             BangDiemChiTiet dbct = new BangDiemChiTiet();
-            MonHoc khoi = (MonHoc) jBangDiemChiTiet.cboMonHoc.getSelectedItem();
-            String maMonHoc = khoi.getMaMonHoc().replaceAll("[^\\d.]", "");
+            MonHoc monHoc = (MonHoc) jBangDiemChiTiet.cboMonHoc.getSelectedItem();
+            String maMonHoc = monHoc.getMaMonHoc().replaceAll("[^\\d.]", "");
             String maBangDiem = jBangDiemChiTiet.txtMaBangDiem.getText().trim().replaceAll("[^\\d.]", "");
-            float diemMieng = Float.parseFloat(jBangDiemChiTiet.txtDiemMieng.getText().trim());
-            float diemKT1 = Float.parseFloat(jBangDiemChiTiet.txtDiemKT1.getText().trim());
-            float diemKT2 = Float.parseFloat(jBangDiemChiTiet.txtDiemKT2.getText().trim());
-            float diemThi = Float.parseFloat(jBangDiemChiTiet.txtDiemThi.getText().trim());
             if (!"".equals(maMonHoc)) {
-                dbct.setMaBangDiem(maBangDiem);
-                dbct.setMaMon(maMonHoc);
-                dbct.setDiemMieng(diemMieng);
-                dbct.setDiem1(diemKT1);
-                dbct.setDiem2(diemKT2);
-                dbct.setDiemThi(diemThi);
+                String diemMieng = jBangDiemChiTiet.txtDiemMieng.getText().trim();
+                String diemKT1 = jBangDiemChiTiet.txtDiemKT1.getText().trim();
+                String diemKT2 = jBangDiemChiTiet.txtDiemKT2.getText().trim();
+                String diemThi = jBangDiemChiTiet.txtDiemThi.getText().trim();
+                if (checkFloat(diemMieng) && checkFloat(diemKT1) && checkFloat(diemKT2) && checkFloat(diemThi)) {
+                    float DiemMieng = Float.parseFloat(jBangDiemChiTiet.txtDiemMieng.getText().trim());
+                    float DiemKT1 = Float.parseFloat(jBangDiemChiTiet.txtDiemKT1.getText().trim());
+                    float DiemKT2 = Float.parseFloat(jBangDiemChiTiet.txtDiemKT2.getText().trim());
+                    float DiemThi = Float.parseFloat(jBangDiemChiTiet.txtDiemThi.getText().trim());
+                    if (checkDiem(DiemMieng) && checkDiem(DiemKT1) && checkDiem(DiemKT2) && checkDiem(DiemThi)) {
+                        dbct.setMaBangDiem(maBangDiem);
+                        dbct.setMaMon(maMonHoc);
+                        dbct.setDiemMieng(DiemMieng);
+                        dbct.setDiem1(DiemKT1);
+                        dbct.setDiem2(DiemKT2);
+                        dbct.setDiemThi(DiemThi);
+                    } else {
+                        Menu.showMessage("Vui lòng nhập lại điểm");
+                        dbct = null;
+                    }
+                } else {
+                    Menu.showMessage("Vui lòng nhập lại điểm");
+                    dbct = null;
+                }
             } else {
                 Menu.showMessage("Vui lòng chọn môn học");
                 dbct = null;

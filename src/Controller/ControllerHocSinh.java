@@ -7,7 +7,9 @@ import Model.*;
 import View.Component.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerHocSinh {
 
@@ -15,6 +17,7 @@ public class ControllerHocSinh {
     private final KhoiDAO kDAO;
     private final HocSinhDAO hsDAO;
     private final JHocSinh jHocSinh;
+    private ModelHocSinh modelHocSinh;
 
     public ControllerHocSinh(JHocSinh _jHocSinh) {
         this.jHocSinh = _jHocSinh;
@@ -67,38 +70,35 @@ public class ControllerHocSinh {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jHocSinh.txtSearch.getText().trim();
+            String txtSearch = jHocSinh.txtSearch.getText().trim().toLowerCase();
+            Lop lop = (Lop) jHocSinh.cboLop.getSelectedItem();
             String maLop = "";
-            if (jHocSinh.cboLop.getItemCount() > 0) {
-                Lop lop = (Lop) jHocSinh.cboLop.getSelectedItem();
-                maLop = lop.getMaLop();
-                maLop = maLop.replaceAll("[^\\d.]", "");
+            if (lop != null) {
+                maLop = lop.getMaLop().replaceAll("[^\\d.]", "");
             }
-            if (!"".equals(txtSearch) && !"".equals(maLop)) {
-                if (!hsDAO.find(txtSearch, maLop).isEmpty()) {
-                    jHocSinh.DataTable(new ModelHocSinh(hsDAO.find(txtSearch, maLop)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!hsDAO.findMaLop(maLop).isEmpty()) {
-                    jHocSinh.DataTable(new ModelHocSinh(hsDAO.findMaLop(maLop)));
-                }
+            if (!"".equals(txtSearch) && !hsDAO.findMaLop(maLop).isEmpty()) {
+                modelHocSinh = (ModelHocSinh) jHocSinh.jTable.getModel();
+                TableRowSorter<ModelHocSinh> trs = new TableRowSorter<>(modelHocSinh);
+                jHocSinh.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
         }
 
         @Override
-        public void insertUpdate(DocumentEvent e) {
+        public void insertUpdate(DocumentEvent e
+        ) {
             search();
         }
 
         @Override
-        public void removeUpdate(DocumentEvent e) {
+        public void removeUpdate(DocumentEvent e
+        ) {
             search();
         }
 
         @Override
-        public void changedUpdate(DocumentEvent e) {
+        public void changedUpdate(DocumentEvent e
+        ) {
             search();
         }
     }
@@ -176,8 +176,16 @@ public class ControllerHocSinh {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            XuLyFileExcel cc = new XuLyFileExcel();
-            cc.xuatExcel(jHocSinh.jTable);
+            String maLop = "";
+            Lop lop = (Lop) jHocSinh.cboLop.getSelectedItem();
+            if (lop != null) {
+                maLop = lop.getMaLop();
+                maLop = maLop.replaceAll("[^\\d.]", "");
+                XuLyFileExcel cc = new XuLyFileExcel();
+                cc.xuatExcel(jHocSinh.jTable);
+            } else {
+                Menu.showMessage("Vui lòng chọn lớp để in");
+            }
         }
     }
 

@@ -45,10 +45,10 @@ public class JBangDiemChiTiet extends JPanel {
         txtMaHocSinh = new JTextField(15);
         txtTenHocSinh = new JTextField(15);
         txtTenHocKy = new JTextField(15);
-        txtMaBangDiem.setEnabled(false);
-        txtMaHocSinh.setEnabled(false);
-        txtTenHocSinh.setEnabled(false);
-        txtTenHocKy.setEnabled(false);
+        txtMaBangDiem.setEditable(false);
+        txtMaHocSinh.setEditable(false);
+        txtTenHocSinh.setEditable(false);
+        txtTenHocKy.setEditable(false);
         txtDiemMieng = new JTextField(15);
         txtDiemKT1 = new JTextField(15);
         txtDiemKT2 = new JTextField(15);

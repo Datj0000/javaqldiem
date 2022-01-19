@@ -6,7 +6,9 @@ import DAO.*;
 import Model.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerBangDiem {
 
@@ -18,6 +20,7 @@ public class ControllerBangDiem {
     private final HocKyDAO hkDAO;
     private final JBangDiem jBangDiem;
     private final Menu menu;
+    private ModelBangDiem modelBangDiem;
 
     public ControllerBangDiem(JBangDiem _jBangDiem, Menu _menu) {
         this.jBangDiem = _jBangDiem;
@@ -132,30 +135,24 @@ public class ControllerBangDiem {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jBangDiem.txtSearch.getText().trim();
+            String txtSearch = jBangDiem.txtSearch.getText().trim().toLowerCase();
             String maLop = "";
+            Lop lop = (Lop) jBangDiem.cboLop.getSelectedItem();
+            if (lop != null) {
+                maLop = lop.getMaLop().replaceAll("[^\\d.]", "");
+            }
             String maHocKy = "";
-            if (jBangDiem.cboLop.getItemCount() > 0) {
-                Lop lop = (Lop) jBangDiem.cboLop.getSelectedItem();
-                maLop = lop.getMaLop();
-                maLop = maLop.replaceAll("[^\\d.]", "");
+            HocKy hk = (HocKy) jBangDiem.cboHocKy.getSelectedItem();
+            if (hk != null) {
+                maHocKy = hk.getMaHocKy().replaceAll("[^\\d.]", "");
             }
-            if (jBangDiem.cboHocKy.getItemCount() > 0) {
-                HocKy hocky = (HocKy) jBangDiem.cboLop.getSelectedItem();
-                maHocKy = hocky.getMaHocKy();
-                maHocKy = maHocKy.replaceAll("[^\\d.]", "");
+            if (!bdDAO.findMa(maHocKy, maLop).isEmpty()) {
+                modelBangDiem = (ModelBangDiem) jBangDiem.jTable.getModel();
+                TableRowSorter<ModelBangDiem> trs = new TableRowSorter<>(modelBangDiem);
+                jBangDiem.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
-            if (!"".equals(txtSearch) && !"".equals(maLop) && !"".equals(maHocKy)) {
-                if (!bdDAO.find(txtSearch, maHocKy, maLop).isEmpty()) {
-                    jBangDiem.DataTable(new ModelBangDiem(bdDAO.find(txtSearch, maHocKy, maLop)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!bdDAO.findMa(maHocKy, maLop).isEmpty()) {
-                    jBangDiem.DataTable(new ModelBangDiem(bdDAO.findMa(maHocKy, maLop)));
-                }
-            }
+
         }
 
         @Override

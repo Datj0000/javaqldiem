@@ -6,12 +6,16 @@ import DAO.*;
 import Model.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerMonHoc {
 
     private MonHocDAO DAO;
     private JMonHoc jMonHoc;
+    private ModelMonHoc modelMonHoc;
 
     public ControllerMonHoc(JMonHoc _jMonHoc) {
         this.jMonHoc = _jMonHoc;
@@ -32,17 +36,12 @@ public class ControllerMonHoc {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jMonHoc.txtSearch.getText().trim();
-            if (!"".equals(txtSearch)) {
-                if (!DAO.find(txtSearch).isEmpty()) {
-                    jMonHoc.DataTable(new ModelMonHoc(DAO.find(txtSearch)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!DAO.getAll().isEmpty()) {
-                    jMonHoc.DataTable(new ModelMonHoc(DAO.getAll()));
-                }
+            String txtSearch = jMonHoc.txtSearch.getText().trim().toLowerCase();
+            if (!DAO.getAll().isEmpty()) {
+                modelMonHoc = (ModelMonHoc) jMonHoc.jTable.getModel();
+                TableRowSorter<ModelMonHoc> trs = new TableRowSorter<>(modelMonHoc);
+                jMonHoc.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
         }
 

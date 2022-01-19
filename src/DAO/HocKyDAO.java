@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.HocKy;
 import java.sql.*;
 import java.util.ArrayList;
@@ -123,31 +123,6 @@ public class HocKyDAO {
             closeConnec(con);
             closeStatement(pr);
         }
-    }
-
-    public ArrayList<HocKy> find(String txt, String MaNamHoc) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<HocKy> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select tbl_hocky.*, tbl_namhoc.tenNamHoc "
-                    + "from tbl_hocky, tbl_namhoc "
-                    + "where tbl_hocky.tenHocKy likeN'%" + txt + "%' and tbl_hocky.maNamHoc='" + MaNamHoc + "' and tbl_hocky.maNamHoc=tbl_namhoc.maNamHoc");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maHocKy = rs.getString(1) + rs.getString(2);
-                HocKy hk = new HocKy(maHocKy, rs.getString(3), rs.getString(4), rs.getString(5));
-                listAll.add(hk);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
     }
 
     public ArrayList<HocKy> findMaNamHoc(String txt) {

@@ -37,7 +37,7 @@ public class JLop extends JPanel {
         JLabel lblTenLop = new JLabel();
         JLabel lblGvcn = new JLabel();
         txtMaLop = new JTextField(18);
-        txtMaLop.setEnabled(false);
+        txtMaLop.setEditable(false);
         txtTenLop = new JTextField(18);
         txtGvcn = new JTextField(18);
         cboKhoi = new ComboboxCustom();
@@ -91,7 +91,7 @@ public class JLop extends JPanel {
         buttonsPane.setBackground(Color.white);
         panel.add(buttonsPane, BorderLayout.NORTH);
         //Table
-        String ColumnName[] = {"Tên khối", "Mã lớp", "Tên lớp", "Giáo viên chủ nghiệm"};
+        String ColumnName[] = {"STT", "Mã lớp", "Tên lớp", "Giáo viên chủ nghiệm"};
         Object[][] data = {};
         jTable = new JTable(data, ColumnName);
         JScrollPane jScrollPane1 = new JScrollPane();

@@ -33,7 +33,7 @@ public class JNamHoc extends JPanel {
         JLabel lblMaNamHoc = new JLabel();
         JLabel lblTenNamHoc = new JLabel();
         txtMaNamHoc = new JTextField(18);
-        txtMaNamHoc.setEnabled(false);
+        txtMaNamHoc.setEditable(false);
         txtTenNamHoc = new JTextField(18);
         JPanel jPanel = new JPanel();
         Menu.customTextField(jPanel, lblMaNamHoc, txtMaNamHoc, "Mã năm học: ");

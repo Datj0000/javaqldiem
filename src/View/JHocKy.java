@@ -35,7 +35,7 @@ public class JHocKy extends JPanel {
         JLabel lblTenHocKy = new JLabel();
         JLabel lblNamHoc = new JLabel();
         txtMaHocKy = new JTextField(18);
-        txtMaHocKy.setEnabled(false);
+        txtMaHocKy.setEditable(false);
         txtTenHocKy = new JTextField(18);
         cboNamHoc = new ComboboxCustom();
         JPanel jPanel = new JPanel();

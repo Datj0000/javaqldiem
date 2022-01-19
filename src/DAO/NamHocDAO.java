@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.NamHoc;
 import java.sql.*;
 import java.util.ArrayList;
@@ -119,28 +119,5 @@ public class NamHocDAO {
             closeConnec(con);
             closeStatement(pr);
         }
-    }
-
-    public ArrayList<NamHoc> find(String txt) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<NamHoc> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select * from tbl_namhoc where maNamHoc like N'%" + txt + "%' or tenNamHoc like N'%" + txt + "%'");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maNamHoc = rs.getString(1) + rs.getString(2);
-                NamHoc namhoc = new NamHoc(maNamHoc, rs.getString(3));
-                listAll.add(namhoc);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
     }
 }

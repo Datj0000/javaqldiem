@@ -8,15 +8,14 @@ import java.io.*;
 import java.util.logging.*;
 import javax.imageio.*;
 
-public class DangNhap extends JFrame implements ActionListener {
+public class JDoiMatKhau extends JFrame {
 
-    private JLabel lblTaikhoan, lblMatKhau;
-    private ButtonCustom btnLogin, btnExit;
-    private JTextField txtTaikhoan;
-    private JPasswordField txtMatKhau;
-    private JPanel jPanel, jPanel2;
+    private JLabel lblMatKhauCu, lblMatKhauMoi, lblMatKhauMoi2;
+    private ButtonCustom btnSave, btnExit;
+    public JPasswordField txtMatKhauCu, txtMatKhauMoi, txtMatKhauMoi2;
+    private JPanel jPanel, jPanel2, jPanel3;
 
-    public DangNhap() {
+    public JDoiMatKhau() {
         this.setLayout(new BorderLayout());
         JPanel detailsPane = new JPanel(new GridBagLayout());
         detailsPane.setBackground(Color.white);
@@ -24,34 +23,38 @@ public class DangNhap extends JFrame implements ActionListener {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
         gbc.gridy = 1;
-        lblTaikhoan = new JLabel();
-        lblMatKhau = new JLabel();
-        txtTaikhoan = new JTextField(18);
-        txtMatKhau = new JPasswordField(18);
+        lblMatKhauCu = new JLabel();
+        lblMatKhauMoi = new JLabel();
+        lblMatKhauMoi2 = new JLabel();
+        txtMatKhauCu = new JPasswordField(18);
+        txtMatKhauMoi = new JPasswordField(18);
+        txtMatKhauMoi2 = new JPasswordField(18);
         jPanel = new JPanel();
-        Menu.customTextField(jPanel, lblTaikhoan, txtTaikhoan, "Tài khoản: ");
+        Menu.customTextField(jPanel, lblMatKhauCu, txtMatKhauCu, "Mật khẩu cũ: ");
         detailsPane.add(jPanel, gbc);
         gbc.gridy++;
         jPanel2 = new JPanel();
-        Menu.customTextField(jPanel2, lblMatKhau, txtMatKhau, "Mật khẩu: ");
+        Menu.customTextField(jPanel2, lblMatKhauMoi, txtMatKhauMoi, "Mật khẩu mới: ");
         detailsPane.add(jPanel2, gbc);
+        gbc.gridy++;
+        jPanel3 = new JPanel();
+        Menu.customTextField(jPanel3, lblMatKhauMoi2, txtMatKhauMoi2, "Nhập lại: ");
+        detailsPane.add(jPanel3, gbc);
 
         JPanel buttonsPane = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 35));
         buttonsPane.setBackground(Color.white);
-        btnLogin = new ButtonCustom();
+        btnSave = new ButtonCustom();
         btnExit = new ButtonCustom();
-        btnLogin.addActionListener(this);
-        btnExit.addActionListener(this);
-        Menu.customButton(btnLogin, "Đăng nhập");
+        Menu.customButton(btnSave, "Lưu");
         Menu.customButton(btnExit, "Thoát");
-        btnLogin.setPreferredSize(new Dimension(100, 35));
+        btnSave.setPreferredSize(new Dimension(100, 35));
         btnExit.setPreferredSize(new Dimension(100, 35));
-        buttonsPane.add(btnLogin);
+        buttonsPane.add(btnSave);
         buttonsPane.add(btnExit);
-        
+
         JPanel topPane = new JPanel();
         topPane.setBackground(new Color(103, 103, 103));
-        JLabel lbltitle = new JLabel("Đăng nhập");
+        JLabel lbltitle = new JLabel("Đổi mật khẩu");
         lbltitle.setFont(new Font("Segoe UI", 1, 18));
         lbltitle.setForeground(Color.WHITE);
         topPane.add(lbltitle);
@@ -75,14 +78,11 @@ public class DangNhap extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent ex) {
-        if (ex.getSource() == btnExit) {
-            System.exit(0);
-        }
-        if (ex.getSource() == btnLogin) {
-            this.setVisible(false);
-            new Menu();
-        }
+    public void addSaveListener(ActionListener listener) {
+        btnSave.addActionListener(listener);
+    }
+
+    public void addExitListener(ActionListener listener) {
+        btnExit.addActionListener(listener);
     }
 }

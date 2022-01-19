@@ -6,12 +6,15 @@ import DAO.*;
 import Model.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerKhoi {
 
     private final KhoiDAO DAO;
     private final JKhoi jKhoi;
+    private ModelKhoi modelKhoi;
 
     public ControllerKhoi(JKhoi _jKhoi) {
         this.jKhoi = _jKhoi;
@@ -32,17 +35,12 @@ public class ControllerKhoi {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jKhoi.txtSearch.getText().trim();
-            if (!"".equals(txtSearch)) {
-                if (!DAO.find(txtSearch).isEmpty()) {
-                    jKhoi.DataTable(new ModelKhoi(DAO.find(txtSearch)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!DAO.getAll().isEmpty()) {
-                    jKhoi.DataTable(new ModelKhoi(DAO.getAll()));
-                }
+            String txtSearch = jKhoi.txtSearch.getText().trim().toLowerCase();
+            if (!DAO.getAll().isEmpty()) {
+                modelKhoi = (ModelKhoi) jKhoi.jTable.getModel();
+                TableRowSorter<ModelKhoi> trs = new TableRowSorter<>(modelKhoi);
+                jKhoi.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
         }
 

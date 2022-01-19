@@ -6,13 +6,16 @@ import DAO.*;
 import Model.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerHocKy {
 
     private final HocKyDAO hkDAO;
     private final NamHocDAO nhDAO;
     private final JHocKy jHocKy;
+    private ModelHocKy modelHocKy;
 
     public ControllerHocKy(JHocKy _jHocKy) {
         this.jHocKy = _jHocKy;
@@ -35,8 +38,7 @@ public class ControllerHocKy {
         @Override
         public void actionPerformed(ActionEvent e) {
             NamHoc namHoc = (NamHoc) jHocKy.cboNamHoc.getSelectedItem();
-            String maNamHoc = namHoc.getMaNamHoc();
-            maNamHoc = maNamHoc.replaceAll("[^\\d.]", "");
+            String maNamHoc = namHoc.getMaNamHoc().replaceAll("[^\\d.]", "");
             clearInfo();
             if (!hkDAO.findMaNamHoc(maNamHoc).isEmpty()) {
                 jHocKy.DataTable(new ModelHocKy(hkDAO.findMaNamHoc(maNamHoc)));
@@ -49,23 +51,19 @@ public class ControllerHocKy {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jHocKy.txtSearch.getText().trim();
+            String txtSearch = jHocKy.txtSearch.getText().trim().toLowerCase();
+            NamHoc namHoc = (NamHoc) jHocKy.cboNamHoc.getSelectedItem();
             String maNamHoc = "";
-            if (jHocKy.cboNamHoc.getItemCount() > 0) {
-                NamHoc namHoc = (NamHoc) jHocKy.cboNamHoc.getSelectedItem();
-                maNamHoc = namHoc.getMaNamHoc();
+            if (namHoc != null) {
+                maNamHoc = namHoc.getMaNamHoc().replaceAll("[^\\d.]", "");
             }
-            if (!"".equals(txtSearch) && !"".equals(maNamHoc)) {
-                if (!hkDAO.find(txtSearch, maNamHoc).isEmpty()) {
-                    jHocKy.DataTable(new ModelHocKy(hkDAO.find(txtSearch, maNamHoc)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!hkDAO.findMaNamHoc(maNamHoc).isEmpty()) {
-                    jHocKy.DataTable(new ModelHocKy(hkDAO.findMaNamHoc(maNamHoc)));
-                }
+            if (!hkDAO.findMaNamHoc(maNamHoc).isEmpty()) {
+                modelHocKy = (ModelHocKy) jHocKy.jTable.getModel();
+                TableRowSorter<ModelHocKy> trs = new TableRowSorter<>(modelHocKy);
+                jHocKy.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
+
         }
 
         @Override

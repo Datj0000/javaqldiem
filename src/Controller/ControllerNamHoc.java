@@ -5,13 +5,18 @@ import Entity.*;
 import DAO.*;
 import Model.*;
 import java.awt.event.*;
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerNamHoc {
 
     private final NamHocDAO DAO;
     private final JNamHoc jNamHoc;
+    private ModelNamHoc modelNamHoc;
 
     public ControllerNamHoc(JNamHoc _jNamHoc) {
         this.jNamHoc = _jNamHoc;
@@ -32,17 +37,13 @@ public class ControllerNamHoc {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jNamHoc.txtSearch.getText().trim();
-            if (!"".equals(txtSearch)) {
-                if (!DAO.find(txtSearch).isEmpty()) {
-                    jNamHoc.DataTable(new ModelNamHoc(DAO.find(txtSearch)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!DAO.getAll().isEmpty()) {
-                    jNamHoc.DataTable(new ModelNamHoc(DAO.getAll()));
-                }
+            String txtSearch = jNamHoc.txtSearch.getText().trim().toLowerCase();
+            System.out.println(txtSearch);
+            if (!DAO.getAll().isEmpty()) {
+                modelNamHoc = (ModelNamHoc) jNamHoc.jTable.getModel();
+                TableRowSorter<ModelNamHoc> trs = new TableRowSorter<>(modelNamHoc);
+                jNamHoc.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
         }
 

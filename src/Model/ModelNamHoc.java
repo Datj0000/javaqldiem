@@ -6,9 +6,9 @@ import Entity.NamHoc;
 
 public class ModelNamHoc extends AbstractTableModel {
 
-    private ArrayList<NamHoc> dsNamHoc = null;
-    private Object[][] data = null;
-    private String ColumnName[] = {"STT","Mã năm học", "Tên năm học"};
+    public ArrayList<NamHoc> dsNamHoc = null;
+    public Object[][] data = null;
+    public String ColumnName[] = {"STT","Mã năm học", "Tên năm học"};
 
     public ModelNamHoc(ArrayList<NamHoc> _dsNamHoc) {
         dsNamHoc = _dsNamHoc;

@@ -33,7 +33,7 @@ public class JMonHoc extends JPanel {
         JLabel lblMaMonHoc = new JLabel();
         JLabel lblTenMonHoc = new JLabel();
         txtMaMonHoc = new JTextField(18);
-        txtMaMonHoc.setEnabled(false);
+        txtMaMonHoc.setEditable(false);
         txtTenMonHoc = new JTextField(18);
         JPanel jPanel = new JPanel();
         Menu.customTextField(jPanel, lblMaMonHoc, txtMaMonHoc, "Mã môn học: ");

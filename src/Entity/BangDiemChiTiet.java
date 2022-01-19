@@ -3,13 +3,14 @@ package Entity;
 public class BangDiemChiTiet {
 
     private String maBangDiem, maMon, tenMon;
-    private float diemMieng, diem1, diem2, diemThi, diemTB;
+    private float diemMieng, diem1, diem2, diemThi;
+    private double diemTB;
 
     public BangDiemChiTiet() {
 
     }
 
-    public BangDiemChiTiet(String maBangDiem, String maMon, String tenMon, float diemMieng, float diem1, float diem2, float diemThi, float diemTB) {
+    public BangDiemChiTiet(String maBangDiem, String maMon, String tenMon, float diemMieng, float diem1, float diem2, float diemThi, double diemTB) {
         this.maBangDiem = maBangDiem;
         this.maMon = maMon;
         this.tenMon = tenMon;
@@ -76,11 +77,11 @@ public class BangDiemChiTiet {
         this.diemThi = diemThi;
     }
 
-    public float getDiemTB() {
+    public double getDiemTB() {
         return diemTB;
     }
 
-    public void setDiemTB(float diemTB) {
+    public void setDiemTB(double diemTB) {
         this.diemTB = diemTB;
     }
 }

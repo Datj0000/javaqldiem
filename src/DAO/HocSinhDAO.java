@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.HocSinh;
 import java.sql.*;
 import java.util.ArrayList;
@@ -113,31 +113,6 @@ public class HocSinhDAO {
         ArrayList<HocSinh> listAll = new ArrayList<>();
         try {
             stmt = con.prepareStatement("select * from tbl_hocsinh where maLop='" + txt + "'");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maHocSinh = rs.getString(1) + rs.getString(2);
-                HocSinh hs = new HocSinh(maHocSinh, rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
-                listAll.add(hs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
-    }
-
-    public ArrayList<HocSinh> find(String txt, String maLop) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<HocSinh> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select * from tbl_hocsinh"
-                    + " where maHocSinh like'%" + txt + "%' and maLop='" + maLop + "' "
-                    + " or tenHocSinh like'%" + txt + "%' and maLop='" + maLop + "' ");
             rs = stmt.executeQuery();
             while (rs.next()) {
                 String maHocSinh = rs.getString(1) + rs.getString(2);

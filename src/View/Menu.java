@@ -19,8 +19,9 @@ public class Menu extends JFrame {
     private JLabel jLabelBD, jLabelHS, jLabelMH, jLabelLop, jLabelKhoi, jLabelHK, jLabelNH;
     private JLabel iconBD, iconHS, iconMH, iconLop, iconKhoi, iconHK, iconNH;
     private JPanel pnlActions, pnlTitle;
-    private JLabel lblMinimize, lblClose, lblTitle;
+    private JLabel lblMinimize, lblClose, lblTitle, lblSetting;
     private int xy, xx;
+    public JTextField txtTaiKhoan;
 
     public Menu() {
         this.setLayout(new BorderLayout());
@@ -44,10 +45,10 @@ public class Menu extends JFrame {
     }
 
     private void Header() {
-
         header = new JPanel();
         pnlActions = new JPanel();
         pnlTitle = new JPanel();
+        lblSetting = new JLabel();
         lblMinimize = new JLabel();
         lblClose = new JLabel();
         lblTitle = new JLabel();
@@ -70,6 +71,13 @@ public class Menu extends JFrame {
 
         pnlActions.setBackground(new Color(77, 77, 77));
         pnlActions.setLayout(new FlowLayout());
+        lblSetting.setIcon(new ImageIcon(getClass().getResource("Images/setting.png")));
+        lblSetting.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                lblSettingMousePressed(evt);
+            }
+        });
         lblMinimize.setIcon(new ImageIcon(getClass().getResource("Images/minimize.png")));
         lblMinimize.addMouseListener(new MouseAdapter() {
             @Override
@@ -84,8 +92,10 @@ public class Menu extends JFrame {
                 lblCloseMousePressed(evt);
             }
         });
+        lblSetting.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblMinimize.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblClose.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        pnlActions.add(lblSetting);
         pnlActions.add(lblMinimize);
         pnlActions.add(lblClose);
         header.add(pnlActions, BorderLayout.LINE_END);
@@ -102,6 +112,9 @@ public class Menu extends JFrame {
 
     private void Slider() {
         slider = new JPanel();
+        txtTaiKhoan = new JTextField();
+        txtTaiKhoan.setVisible(false);
+        slider.add(txtTaiKhoan);
         slider.setBackground(new Color(103, 103, 103));
         slider.setPreferredSize(new Dimension(220, 500));
         btnBD = new JPanel();
@@ -213,8 +226,8 @@ public class Menu extends JFrame {
         this.setVisible(true);
     }
 
-    public static ThongBao showMessage(String message) {
-        ThongBao tb = new ThongBao(message);
+    public static JThongBao showMessage(String message) {
+        JThongBao tb = new JThongBao(message);
         tb.setVisible(true);
         return tb;
     }
@@ -260,6 +273,7 @@ public class Menu extends JFrame {
         lbl.setFont(new Font("Segoe UI", 0, 14));
         lbl.setForeground(new Color(77, 77, 77));
         lbl.setText(str);
+        txt.setBackground(Color.white);
         txt.setFont(new Font("Segoe UI", 0, 14));
         txt.setForeground(new Color(102, 102, 102));
         txt.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(77, 77, 77)));
@@ -337,6 +351,7 @@ public class Menu extends JFrame {
         jTable.setSelectionForeground(Color.white);
         jTable.setShowHorizontalLines(false);
         jTable.setShowVerticalLines(false);
+        jTable.setBorder(new EmptyBorder(0, 5, 0, 5));
         JTableHeader jTableHeader = jTable.getTableHeader();
         jTableHeader.setReorderingAllowed(false);
         jTableHeader.setResizingAllowed(false);
@@ -345,9 +360,11 @@ public class Menu extends JFrame {
         jTableHeader.setBackground(new Color(77, 77, 77));
         jTableHeader.setBorder(new LineBorder(new Color(103, 103, 103)));
         jScrollPane1.setVerticalScrollBar(new ScrollBarCustom());
-        ScrollBarCustom sp = new ScrollBarCustom();
-        sp.setOrientation(JScrollBar.HORIZONTAL);
-        jScrollPane1.setHorizontalScrollBar(sp);
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(103, 103, 103));
+        jScrollPane1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, panel);
+        jScrollPane1.getViewport().setBackground(Color.white);
+        jScrollPane1.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
         jScrollPane1.setBackground(Color.white);
         jScrollPane1.setBorder(new LineBorder(new Color(103, 103, 103)));
         jScrollPane1.setOpaque(false);
@@ -393,6 +410,10 @@ public class Menu extends JFrame {
         slider.add(btn);
     }
 
+    public void setTxtTaiKhoan(String txt) {
+        txtTaiKhoan.setText(txt);
+    }
+
     private void setColor(JPanel pane) {
         pane.setBackground(new Color(77, 77, 77));
     }
@@ -407,6 +428,12 @@ public class Menu extends JFrame {
     }
 
     //Event
+    private void lblSettingMousePressed(MouseEvent evt) {
+        JDoiMatKhau dmk = new JDoiMatKhau();
+        ControllerDoiMatKhau controller = new ControllerDoiMatKhau(dmk, txtTaiKhoan.getText());
+        controller.ShowData();
+    }
+
     private void lblCloseMousePressed(MouseEvent evt) {
         System.exit(0);
     }

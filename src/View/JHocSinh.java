@@ -43,7 +43,7 @@ public class JHocSinh extends JPanel {
         JLabel lblNoiSinh = new JLabel();
         JLabel lblDanToc = new JLabel();
         txtMaHocSinh = new JTextField(15);
-        txtMaHocSinh.setEnabled(false);
+        txtMaHocSinh.setEditable(false);
         txtTenHocSinh = new JTextField(15);
         txtNgaySinh = new JTextField(15);
         txtNoiSinh = new JTextField(15);

@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.MonHoc;
 import java.sql.*;
 import java.util.ArrayList;
@@ -97,28 +97,5 @@ public class MonHocDAO {
             closeConnec(con);
             closeStatement(pr);
         }
-    }
-
-    public ArrayList<MonHoc> find(String txt) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<MonHoc> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select * from tbl_monhoc where maMonHoc like N'%" + txt + "%' or tenMonHoc like N'%" + txt + "%'");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maMonHoc = rs.getString(1) + rs.getString(2);
-                MonHoc monHoc = new MonHoc(maMonHoc, rs.getString(3));
-                listAll.add(monHoc);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
     }
 }

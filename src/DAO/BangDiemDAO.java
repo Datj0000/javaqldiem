@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.BangDiem;
 import java.sql.*;
 import java.util.ArrayList;
@@ -86,33 +86,6 @@ public class BangDiemDAO {
             closeConnec(con);
             closeStatement(pr);
         }
-    }
-
-    public ArrayList<BangDiem> find(String txt, String maHocKy, String maLop) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<BangDiem> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select tbl_bangdiem.* tbl_hocsinh.tenHocSinh as tenHocSinhHT, tbl_hocsinh.prefix as maHocSinhHT"
-                    + " from tbl_bangdiem, tbl_hocsinh"
-                    + " where tbl_bangdiem.maBangDiem like N'%" + txt + "%' and tbl_bangdiem.maHocSinh = tbl_hocsinh.maHocSinh and tbl_bangdiem.maHocKy ='" + maHocKy + "' and tbl_bangdiem.maLop ='" + maLop + "'"
-                    + " or tbl_hocsinh.tenHocSinh like N'%" + txt + "%' and tbl_bangdiem.maHocSinh = tbl_hocsinh.maHocSinh and tbl_bangdiem.maHocKy ='" + maHocKy + "' and tbl_bangdiem.maLop ='" + maLop + "'");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maBangDiem = rs.getString(1) + rs.getString(2);
-                String maHocSinh = rs.getString("maHocSinhHT") + rs.getString(5);
-                BangDiem bangdiem = new BangDiem(maBangDiem, rs.getString(3), rs.getString(4), maHocSinh, rs.getString("tenHocSinhHT"));
-                listAll.add(bangdiem);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
     }
 
     public ArrayList<BangDiem> findMa(String maHocKy, String maLop) {

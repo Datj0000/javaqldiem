@@ -1,6 +1,6 @@
 package DAO;
 
-import static DAO.DatabaseConnection.*;
+import static Connection.DatabaseConnection.*;
 import Entity.Lop;
 import java.sql.*;
 import java.util.ArrayList;
@@ -144,31 +144,6 @@ public class LopDAO {
             closeConnec(con);
             closeStatement(pr);
         }
-    }
-
-    public ArrayList<Lop> find(String txt, String maKhoi) {
-        Connection con = getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ArrayList<Lop> listAll = new ArrayList<>();
-        try {
-            stmt = con.prepareStatement("select * from tbl_lop"
-                    + " where maLop like'%" + txt + "%' and maKhoi='" + maKhoi + "' "
-                    + " or tenLop like'%" + txt + "%' and maKhoi='" + maKhoi + "' "
-                    + " or tenGVCN like'%" + txt + "%' and maKhoi='" + maKhoi + "' ");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String maLop = rs.getString(1) + rs.getString(2);
-                Lop lop = new Lop(maLop, rs.getString(3), rs.getString(4), rs.getString(5));
-                listAll.add(lop);
-            }
-        } catch (SQLException e) {
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnec(con);
-        }
-        return listAll;
     }
 
     public ArrayList<Lop> findMaKhoi(String txt) {

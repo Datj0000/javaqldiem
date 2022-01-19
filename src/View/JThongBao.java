@@ -9,11 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
-public class ThongBao extends JFrame implements ActionListener {
+public class JThongBao extends JFrame implements ActionListener {
 
     private final ButtonCustom btnOk;
 
-    public ThongBao(String txt) {
+    public JThongBao(String txt) {
         this.setLayout(new BorderLayout());
         //Top
         JPanel topPane = new JPanel();
@@ -48,7 +48,9 @@ public class ThongBao extends JFrame implements ActionListener {
         }
         this.setIconImage(im);
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(103, 103, 103)));
-        this.setBounds(670, 300, 300, 170);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(300, 170);
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("Thông báo");
         this.setUndecorated(true);

@@ -6,13 +6,16 @@ import DAO.*;
 import Model.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.event.*;
+import javax.swing.table.TableRowSorter;
 
 public class ControllerLop {
 
     private final KhoiDAO kDAO;
     private final LopDAO lDAO;
     private final JLop jLop;
+    private ModelLop modelLop;
 
     public ControllerLop(JLop _jLop) {
         this.jLop = _jLop;
@@ -49,22 +52,17 @@ public class ControllerLop {
     class SearchListener implements DocumentListener {
 
         void search() {
-            String txtSearch = jLop.txtSearch.getText().trim();
+            String txtSearch = jLop.txtSearch.getText().trim().toLowerCase();
+            Khoi khoi = (Khoi) jLop.cboKhoi.getSelectedItem();
             String maKhoi = "";
-            if (jLop.cboKhoi.getItemCount() > 0) {
-                Khoi khoi = (Khoi) jLop.cboKhoi.getSelectedItem();
-                maKhoi = khoi.getMaKhoi();
+            if (khoi != null) {
+                maKhoi = khoi.getMaKhoi().replaceAll("[^\\d.]", "");
             }
-            if (!"".equals(txtSearch) && !"".equals(maKhoi)) {
-                if (!lDAO.find(txtSearch, maKhoi).isEmpty()) {
-                    jLop.DataTable(new ModelLop(lDAO.find(txtSearch, maKhoi)));
-                } else {
-                    clearTable();
-                }
-            } else {
-                if (!lDAO.findMaKhoi(maKhoi).isEmpty()) {
-                    jLop.DataTable(new ModelLop(lDAO.findMaKhoi(maKhoi)));
-                }
+            if (!"".equals(maKhoi) && !lDAO.findMaKhoi(maKhoi).isEmpty()) {
+                modelLop = (ModelLop) jLop.jTable.getModel();
+                TableRowSorter<ModelLop> trs = new TableRowSorter<>(modelLop);
+                jLop.jTable.setRowSorter(trs);
+                trs.setRowFilter(RowFilter.regexFilter("(?i)" + txtSearch));
             }
         }
 

@@ -44,7 +44,7 @@ public class JBangDiem extends JPanel {
         cboHocSinh = new ComboboxCustom();
         cboNamHoc = new ComboboxCustom();
         txtMaBangDiem = new JTextField(15);
-        txtMaBangDiem.setEnabled(false);
+        txtMaBangDiem.setEditable(false);
         JPanel jPane = new JPanel();
         Menu.customTextField(jPane, lblMaBangDiem, txtMaBangDiem, "Mã bảng điểm: ");
         detailsPane.add(jPane, gbc);
